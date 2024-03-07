@@ -110,14 +110,38 @@ public class LinkedList {
     }
 
     public void reverse() {
-        var currentNode = last;
-        while (currentNode != first) {
-            var previousNode = getPrevious(currentNode);
-            currentNode.next = previousNode;
-            currentNode = previousNode;
+        if (isEmpty())
+            return;
+        var previous = first;
+        var current = first.next;
+        while (current != null) {
+            var next = current.next;
+            current.next = previous;
+            previous = current;
+            current = next;
         }
-        first = last;
-        last = getPrevious(currentNode);
+
+        last = first;
+        last.next = null;
+        first = previous;
+    }
+
+    public int getKthFromEnd(int k) {
+        if (isEmpty())
+            throw new IllegalStateException();
+        int pointerDistance = k - 1;
+        var rightPointer = first;
+        var leftPointer = first;
+        for (int i = 0; i < pointerDistance; i++) {
+            rightPointer = rightPointer.next;
+            if (rightPointer == null)
+                throw new IllegalArgumentException();
+        }
+        while (rightPointer != last) {
+            leftPointer = leftPointer.next;
+            rightPointer = rightPointer.next;
+        }
+        return leftPointer.value;
     }
 
     public int size() {
